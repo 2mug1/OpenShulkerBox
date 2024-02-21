@@ -1,5 +1,11 @@
 name: OpenShulkerBox
-author: Querz
-version: @plugin.version@
+author: Querz, iamtakagi
+version: 1.0.0
 main: net.querz.openshulkerbox.OpenShulkerBoxPlugin
-api-version: 1.13
+api-version: 1.20
+commands:
+  openshulkerbox:
+    description: Open a shulker box
+    usage: /<command>
+    permission: openshulkerbox.command
+    aliases: [sb, shulker, shulkerbox, opensb, osb]
