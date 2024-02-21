@@ -29,9 +29,15 @@ public class OpenShulkerBoxListener implements Listener {
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		ItemStack itemInMainHand;
-		Player player;
+		Player player = event.getPlayer();
+		if (player == null) {
+			return;
+		}
+		if (!OpenShulkerBoxPlugin.getInstance().getEnabledPlayers().contains(player.getUniqueId().toString())) {
+			return;
+		}
 		if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
-				&& (itemInMainHand = (player = event.getPlayer()).getInventory().getItemInMainHand()) != null
+				&& (itemInMainHand = player.getInventory().getItemInMainHand()) != null
 				&& isShulkerBox(itemInMainHand.getType())
 				&& player.hasPermission(PERMISSION_OPEN)
 				&& player.isSneaking() == OpenShulkerBoxPlugin.getInstance().openWhileSneaking()) {
@@ -49,8 +55,21 @@ public class OpenShulkerBoxListener implements Listener {
 
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
-		HumanEntity player;
-		if (shulkerBoxSlots.containsKey((player = event.getPlayer()).getUniqueId())) {
+		HumanEntity humanEntity = event.getPlayer();
+		if (humanEntity == null) {
+			return;
+		}
+		if (!(humanEntity instanceof Player)) {
+			return;
+		}
+		Player player = (Player) humanEntity;
+		if (player == null) {
+			return;
+		}
+		if (!OpenShulkerBoxPlugin.getInstance().getEnabledPlayers().contains(player.getUniqueId().toString())) {
+			return;
+		}
+		if (shulkerBoxSlots.containsKey(player.getUniqueId())) {
 			ItemStack[] items = event.getInventory().getContents();
 			saveShulkerBox(player, items);
 			shulkerBoxSlots.remove(player.getUniqueId());
@@ -60,8 +79,21 @@ public class OpenShulkerBoxListener implements Listener {
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
-		HumanEntity player;
-		if (shulkerBoxSlots.containsKey((player = event.getWhoClicked()).getUniqueId())) {
+		HumanEntity humanEntity = event.getWhoClicked();
+		if (humanEntity == null) {
+			return;
+		}
+		if (!(humanEntity instanceof Player)) {
+			return;
+		}
+		Player player = (Player) humanEntity;
+		if (player == null) {
+			return;
+		}
+		if (!OpenShulkerBoxPlugin.getInstance().getEnabledPlayers().contains(player.getUniqueId().toString())) {
+			return;
+		}
+		if (shulkerBoxSlots.containsKey(player.getUniqueId())) {
 
 			//prevent shulker box from dropping into shulker box
 			if (event.getCursor() != null
@@ -156,9 +188,22 @@ public class OpenShulkerBoxListener implements Listener {
 
 	@EventHandler
 	public void onInventoryDrag(InventoryDragEvent event) {
-		HumanEntity player;
+		HumanEntity humanEntity = event.getWhoClicked();
+		if (humanEntity == null) {
+			return;
+		}
+		if (!(humanEntity instanceof Player)) {
+			return;
+		}
+		Player player = (Player) humanEntity;
+		if (player == null) {
+			return;
+		}
+		if (!OpenShulkerBoxPlugin.getInstance().getEnabledPlayers().contains(player.getUniqueId().toString())) {
+			return;
+		}
 
-		if (shulkerBoxSlots.containsKey((player = event.getWhoClicked()).getUniqueId())
+		if (shulkerBoxSlots.containsKey(player.getUniqueId())
 				&& isShulkerBox(event.getOldCursor().getType())) {
 			if (event.getRawSlots().stream().anyMatch(a -> a < 27)
 					|| event.getRawSlots().size() > 1) {
