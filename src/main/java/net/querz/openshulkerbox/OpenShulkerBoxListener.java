@@ -232,21 +232,38 @@ public class OpenShulkerBoxListener implements Listener {
 
 	private boolean isShulkerBox(Material m) {
 		switch (m) {
+			case SHULKER_BOX:
+				return true;
 			case LIGHT_GRAY_SHULKER_BOX:
+				return true;
 			case BLACK_SHULKER_BOX:
+				return true;
 			case BLUE_SHULKER_BOX:
+				return true;
 			case BROWN_SHULKER_BOX:
+				return true;
 			case CYAN_SHULKER_BOX:
+				return true;
 			case GRAY_SHULKER_BOX:
+				return true;
 			case GREEN_SHULKER_BOX:
+				return true;
 			case LIGHT_BLUE_SHULKER_BOX:
+				return true;
 			case LIME_SHULKER_BOX:
+				return true;
 			case MAGENTA_SHULKER_BOX:
+				return true;
 			case ORANGE_SHULKER_BOX:
+				return true;
 			case PINK_SHULKER_BOX:
+				return true;
 			case PURPLE_SHULKER_BOX:
+				return true;
 			case RED_SHULKER_BOX:
+				return true;
 			case WHITE_SHULKER_BOX:
+				return true;
 			case YELLOW_SHULKER_BOX:
 				return true;
 			default:
