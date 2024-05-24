@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -173,6 +174,16 @@ public class OpenShulkerBoxListener implements Listener {
 			}
 		}
 	}
+
+    @EventHandler
+    public void onItemDrop(PlayerDropItemEvent event){ //Because Pressing Q can dupe items
+        HumanEntity player;
+        if (shulkerBoxSlots.containsKey((player = event.getPlayer()).getUniqueId())) {
+            ItemStack[] items = player.getOpenInventory().getTopInventory().getContents(); //Only called if inv is open
+            saveShulkerBox(player, items);
+            player.getWorld().playSound(player.getLocation(), Sound.BLOCK_SHULKER_BOX_CLOSE, .1F, 1.0F);
+        }
+    }
 
 	private void saveShulkerBox(HumanEntity player, ItemStack[] items) {
         ItemStack shulkerbox = shulkerBoxOnCursors.contains(player.getUniqueId())  //Check if the shulkerbox is on the cursor
