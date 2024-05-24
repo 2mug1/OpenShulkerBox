@@ -77,6 +77,7 @@ public class OpenShulkerBoxListener implements Listener {
 			//close inventory if opened shulker box is dropped
 			if (shulkerBoxSlots.get(player.getUniqueId()).equals(event.getRawSlot())) {
 				if (isPickupAction(event.getAction())) {
+                    shulkerBoxSlots.put(player.getUniqueId(),-3141); //Move Shulkerbox to impossible slot to avoid bugs :)
 					shulkerBoxOnCursors.add(player.getUniqueId());
 					return;
 				} else if (event.getAction() == InventoryAction.DROP_ALL_SLOT
@@ -174,7 +175,10 @@ public class OpenShulkerBoxListener implements Listener {
 	}
 
 	private void saveShulkerBox(HumanEntity player, ItemStack[] items) {
-		ItemStack shulkerbox = player.getInventory().getItem(toSlot(shulkerBoxSlots.get(player.getUniqueId())));
+        ItemStack shulkerbox = shulkerBoxOnCursors.contains(player.getUniqueId())  //Check if the shulkerbox is on the cursor
+                ? player.getItemOnCursor()
+                : player.getInventory().getItem(toSlot(shulkerBoxSlots.get(player.getUniqueId())));
+
 		if (shulkerbox == null || !isShulkerBox(shulkerbox.getType())) {
 			return;
 		}
