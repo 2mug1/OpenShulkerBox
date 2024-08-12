@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -109,6 +110,7 @@ public class OpenShulkerBoxListener implements Listener {
 			//close inventory if opened shulker box is dropped
 			if (shulkerBoxSlots.get(player.getUniqueId()).equals(event.getRawSlot())) {
 				if (isPickupAction(event.getAction())) {
+                    shulkerBoxSlots.put(player.getUniqueId(),-3141); //Move Shulkerbox to impossible slot to avoid bugs :)
 					shulkerBoxOnCursors.add(player.getUniqueId());
 					return;
 				} else if (event.getAction() == InventoryAction.DROP_ALL_SLOT
@@ -218,8 +220,21 @@ public class OpenShulkerBoxListener implements Listener {
 		}
 	}
 
+    @EventHandler
+    public void onItemDrop(PlayerDropItemEvent event){ //Because Pressing Q can dupe items
+        HumanEntity player;
+        if (shulkerBoxSlots.containsKey((player = event.getPlayer()).getUniqueId())) {
+            ItemStack[] items = player.getOpenInventory().getTopInventory().getContents(); //Only called if inv is open
+            saveShulkerBox(player, items);
+            player.getWorld().playSound(player.getLocation(), Sound.BLOCK_SHULKER_BOX_CLOSE, .1F, 1.0F);
+        }
+    }
+
 	private void saveShulkerBox(HumanEntity player, ItemStack[] items) {
-		ItemStack shulkerbox = player.getInventory().getItem(toSlot(shulkerBoxSlots.get(player.getUniqueId())));
+        ItemStack shulkerbox = shulkerBoxOnCursors.contains(player.getUniqueId())  //Check if the shulkerbox is on the cursor
+                ? player.getItemOnCursor()
+                : player.getInventory().getItem(toSlot(shulkerBoxSlots.get(player.getUniqueId())));
+
 		if (shulkerbox == null || !isShulkerBox(shulkerbox.getType())) {
 			return;
 		}
